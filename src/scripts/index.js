@@ -32,7 +32,7 @@ const jobInput = editProfileForm.querySelector('.popup__input_type_description')
 
 // Добавляем карточки при загрузке
 initialCards.forEach(function (item) {
-  placesList.append(createCard(item, removeCard, handleCardClick, handleLikeClick));
+  placesList.append(createCard(item, removeCard, handleCardClick));
 });
 
 // Открытие попапа редактирования профиля
@@ -67,7 +67,7 @@ newCardForm.addEventListener('submit', function (evt) {
   const name = inputCardName.value;
   const link = inputCardLink.value;
 
-  const newCard = createCard({ name, link }, removeCard, handleCardClick, handleLikeClick);
+  const newCard = createCard({ name, link }, removeCard, handleCardClick);
   placesList.prepend(newCard); // добавляем в начало списка
 
   newCardForm.reset(); // очищаем поля формы
@@ -82,7 +82,7 @@ function handleCardClick(name, link) {
   openModal(popupImage);
 }
 
-// кнопка лайк
-function handleLikeClick(evt) {
-    evt.target.classList.toggle('card__like-button_is-active');
-}
+//добавляем всем попапам класс popup_is-animated
+document.querySelectorAll('.popup').forEach(popup => {
+  popup.classList.add('popup_is-animated');
+});
