@@ -1,9 +1,18 @@
 import '../pages/index.css'; 
 import { createCard } from '../components/card';
 import { openModal, closeModal } from '../components/modal';
-import { enableValidation, clearValidation, validationConfig } from '../components/validation';
-import { getUserInfo, getInitialCards, addNewCard, deleteCard, updateUserInfo, updateUserAvatar } from '../components/api';
+import { enableValidation, clearValidation } from '../components/validation';
+import { getUserInfo, getInitialCards, addNewCard, deleteCard, updateUserInfo, updateUserAvatar, addLike, removeLike } from '../components/api';
 
+//конфиг валидации
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+}
 
 // DOM узлы
 const cardTemplate = document.querySelector('#card-template').content;
@@ -40,6 +49,7 @@ const popupAvatar = document.querySelector('.popup_type_avatar');
 const avatarForm = popupAvatar.querySelector('.popup__form');
 const avatarSubmitButton = avatarForm.querySelector('.popup__button');
 const avatarInput = avatarForm.elements['avatar'];
+const avatarContainer = document.querySelector('.profile__avatar-container');
 const avatarEditButton = document.querySelector('.profile__avatar-edit');
 
 //переменная с id текущего юзера
@@ -55,6 +65,18 @@ function handleRemoveCard(cardId, cardEl) {
     });
 }
 
+function handleLikeClick(cardId, likeBtn, likeCount) {
+  const isLiked = likeBtn.classList.contains('card__like-button_is-active');
+  const request = isLiked ? removeLike(cardId) : addLike(cardId);
+
+  request
+    .then(updatedCard => {
+      likeCount.textContent = updatedCard.likes.length;
+      likeBtn.classList.toggle('card__like-button_is-active');
+    })
+    .catch(err => console.error('Ошибка обновления лайка:', err));
+}
+
 //Основная загрузка профиля и карточек 
 Promise.all([ getUserInfo(), getInitialCards() ])
   .then(([ userData, cards ]) => {
@@ -68,7 +90,8 @@ Promise.all([ getUserInfo(), getInitialCards() ])
         cardData,
         handleRemoveCard,   
         handleCardClick,
-        currentUserId
+        currentUserId,
+        handleLikeClick
       );
       placesList.prepend(cardElement);
     });
@@ -114,9 +137,9 @@ addCardButton.addEventListener('click', function () {
 });
 
 // Открытие попапа редактирования аватара
-avatarEditButton.addEventListener('click', () => {
-  clearValidation(avatarForm, validationConfig);
+avatarContainer.addEventListener('click', () => {
   avatarForm.reset();
+  clearValidation(avatarForm, validationConfig);
   openModal(popupAvatar);
 });
 
@@ -140,7 +163,8 @@ newCardForm.addEventListener('submit', function (evt) {
         cardData,
         handleRemoveCard,    
         handleCardClick,
-        currentUserId
+        currentUserId,
+        handleLikeClick
       );
       placesList.prepend(cardEl);
       newCardForm.reset();

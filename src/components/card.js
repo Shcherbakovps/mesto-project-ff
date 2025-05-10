@@ -1,6 +1,6 @@
-import { addLike, removeLike } from './api';
+//import { addLike, removeLike } from './api';
 
-function createCard(item, removeCardHandler, imageClickHandler, userId) {
+function createCard(item, removeCardHandler, imageClickHandler, userId, handleLikeClick) {
   const cardTemplate = document.querySelector('#card-template').content;
   const newCard = cardTemplate.querySelector('.card').cloneNode(true);
 
@@ -22,7 +22,7 @@ function createCard(item, removeCardHandler, imageClickHandler, userId) {
     likeBtn.classList.add('card__like-button_is-active');
   }
 
-  // Обработчик лайка через API
+  /*// Обработчик лайка через API
   likeBtn.addEventListener('click', () => {
     const isLiked = likeBtn.classList.contains('card__like-button_is-active');
     const request = isLiked
@@ -35,7 +35,10 @@ function createCard(item, removeCardHandler, imageClickHandler, userId) {
         likeBtn.classList.toggle('card__like-button_is-active');
       })
       .catch(err => console.error('Ошибка лайка:', err));
-  });
+  });*/
+  likeBtn.addEventListener('click', () => {
+    handleLikeClick(item._id, likeBtn, likeCount);
+  })
 
   // Открытие попапа по клику на картинку
   img.addEventListener('click', () => {

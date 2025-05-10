@@ -1,12 +1,12 @@
 /* validation.js */
-const validationConfig = { 
+/*const validationConfig = { 
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
   submitButtonSelector: '.popup__button',
   inactiveButtonClass: 'popup__button_disabled',
   inputErrorClass: 'popup__input_type_error',
   errorClass: 'popup__error_visible'
-}
+}*/
 
 //покажем текст ошибки под полем ввода
 function showInputError(formElement, inputElement, config) {
@@ -87,11 +87,11 @@ function clearValidation(formElement, config) {
 }  
 
 //включаем валидацию для всех форм
-function enableValidation(config = validationConfig) {
+function enableValidation(config) {
   const formList = Array.from(document.querySelectorAll(config.formSelector));
   formList.forEach(formElement => {
     setEventListeners(formElement, config);
   });
 }
 
-export { enableValidation, clearValidation, validationConfig };
+export { enableValidation, clearValidation };
