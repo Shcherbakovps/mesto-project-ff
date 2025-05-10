@@ -1,8 +1,8 @@
 import '../pages/index.css'; 
-import { createCard } from '../components/card';
+import { createCard, handleLikeClick } from '../components/card';
 import { openModal, closeModal } from '../components/modal';
 import { enableValidation, clearValidation } from '../components/validation';
-import { getUserInfo, getInitialCards, addNewCard, deleteCard, updateUserInfo, updateUserAvatar, addLike, removeLike } from '../components/api';
+import { getUserInfo, getInitialCards, addNewCard, deleteCard, updateUserInfo, updateUserAvatar } from '../components/api';
 
 //конфиг валидации
 const validationConfig = {
@@ -63,18 +63,6 @@ function handleRemoveCard(cardId, cardEl) {
     .catch(err => {
       console.error('Не удалось удалить карточку:', err);
     });
-}
-
-function handleLikeClick(cardId, likeBtn, likeCount) {
-  const isLiked = likeBtn.classList.contains('card__like-button_is-active');
-  const request = isLiked ? removeLike(cardId) : addLike(cardId);
-
-  request
-    .then(updatedCard => {
-      likeCount.textContent = updatedCard.likes.length;
-      likeBtn.classList.toggle('card__like-button_is-active');
-    })
-    .catch(err => console.error('Ошибка обновления лайка:', err));
 }
 
 //Основная загрузка профиля и карточек 

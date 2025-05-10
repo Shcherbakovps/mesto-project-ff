@@ -1,4 +1,16 @@
-//import { addLike, removeLike } from './api';
+import { addLike, removeLike } from './api';
+
+function handleLikeClick(cardId, likeBtn, likeCount) {
+  const isLiked = likeBtn.classList.contains('card__like-button_is-active');
+  const request = isLiked ? removeLike(cardId) : addLike(cardId);
+
+  request
+    .then(updatedCard => {
+      likeCount.textContent = updatedCard.likes.length;
+      likeBtn.classList.toggle('card__like-button_is-active');
+    })
+    .catch(err => console.error('Ошибка обновления лайка:', err));
+}
 
 function createCard(item, removeCardHandler, imageClickHandler, userId, handleLikeClick) {
   const cardTemplate = document.querySelector('#card-template').content;
@@ -22,20 +34,6 @@ function createCard(item, removeCardHandler, imageClickHandler, userId, handleLi
     likeBtn.classList.add('card__like-button_is-active');
   }
 
-  /*// Обработчик лайка через API
-  likeBtn.addEventListener('click', () => {
-    const isLiked = likeBtn.classList.contains('card__like-button_is-active');
-    const request = isLiked
-      ? removeLike(item._id)
-      : addLike(item._id);
-
-    request
-      .then(updatedCard => {
-        likeCount.textContent = updatedCard.likes.length;
-        likeBtn.classList.toggle('card__like-button_is-active');
-      })
-      .catch(err => console.error('Ошибка лайка:', err));
-  });*/
   likeBtn.addEventListener('click', () => {
     handleLikeClick(item._id, likeBtn, likeCount);
   })
@@ -57,4 +55,4 @@ function createCard(item, removeCardHandler, imageClickHandler, userId, handleLi
   return newCard;
 }
 
-export { createCard };
+export { createCard, handleLikeClick };
